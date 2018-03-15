@@ -1,4 +1,4 @@
-#include <iostream>
+ï»¿#include <iostream>
 #include <iomanip>
 
 using namespace std;
@@ -22,7 +22,7 @@ public:
 
 	void Show() {
 		int i, j;
-		cout << i_rows << " ñòðîê, " << i_columns << " ñòîëáöîâ.";
+		cout << i_rows << " ÑÑ‚Ñ€Ð¾Ðº, " << i_columns << " ÑÑ‚Ð¾Ð»Ð±Ñ†Ð¾Ð².";
 		for (i = 0; i < i_rows; i++) {
 			cout << endl << endl;
 			for (j = 0; j < i_columns; j++)
@@ -34,7 +34,7 @@ public:
 
 void main() {
 	setlocale(LC_ALL, "russian");
-	cout << "ÊÂÀÄÐÀÒÍÛÅ ÌÀÒÐÈÖÛ 1.0\n";
+	cout << "ÐšÐ’ÐÐ”Ð ÐÐ¢ÐÐ«Ð• ÐœÐÐ¢Ð Ð˜Ð¦Ð« 1.0\n";
 	Matrix *m_1 = new Matrix();
 	m_1->Show();
 
