@@ -10,12 +10,11 @@ class Matrix {
 public:
 	//конструктор по умолчанию + основной
 	Matrix(int i_size = 5): i_size(i_size) {
-		int i, j;
 		srand(time(0));
 		f_p_matrix = new float *[i_size];
-		for (i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
-		for (i = 0; i < i_size; i++)
-			for (j = 0; j < i_size; j++)
+		for (int i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
+		for (int i = 0; i < i_size; i++)
+			for (int j = 0; j < i_size; j++)
 				f_p_matrix[i][j] = rand() % 11;
 	}
 
@@ -35,9 +34,12 @@ public:
 	}
 
 	Matrix(const Matrix&); //конструктор копирования
-	Matrix& Sum(const Matrix& matrix); //метод сложения
-	Matrix& Sub(const Matrix& matrix); //метод вычитания
-	Matrix& Mul(const Matrix& matrix); //метод умножения
+	Matrix& Sum(const Matrix& matrix); //сложение
+	Matrix& Sub(const Matrix& matrix); //вычитание
+	Matrix& Mul(const Matrix& matrix); //умножение
+	float InfNorm(); //бесконечная норма
+	float FstNorm(); //первая норма
+	float EucNorm(); //евклидова норма
 	friend ostream& operator<<(ostream&, Matrix&); //оператор вывода
 };
 
@@ -71,16 +73,47 @@ Matrix& Matrix::Sub(const Matrix& matrix) {
 //метод умножения
 Matrix& Matrix::Mul(const Matrix& matrix) {
 	Matrix *result = new Matrix(i_size);
-	int i, j, k;
-
-	for (i = 0; i < i_size; i++)
-		for (j = 0; j < i_size; j++)
+	for (int i = 0; i < i_size; i++)
+		for (int j = 0; j < i_size; j++)
 		{
 			result->f_p_matrix[i][j] = 0;
-			for (k = 0; k < i_size; k++)
+			for (int k = 0; k < i_size; k++)
 				result->f_p_matrix[i][j] += (f_p_matrix[i][k] * matrix.f_p_matrix[k][j]);
 		}
 	return *result;
+}
+
+//нахождение бесконечной нормы
+float Matrix::InfNorm() {
+	float f_norm = 0.0;
+	for (int i = 0; i < i_size; i++) {
+		float f_temp = 0.0;
+		for (int j = 0; j < i_size; j++)
+			f_temp += abs(f_p_matrix[i][j]);
+		if (f_temp > f_norm) f_norm = f_temp;
+	}
+	return f_norm;
+}
+
+//нахождение первой нормы
+float Matrix::FstNorm() {
+	float f_norm = 0.0;
+	for (int j = 0; j < i_size; j++) {
+		float f_temp = 0.0;
+		for (int i = 0; i < i_size; i++)
+			f_temp += abs(f_p_matrix[i][j]);
+		if (f_temp > f_norm) f_norm = f_temp;
+	}
+	return f_norm;
+}
+
+//нахождение евклидовой нормы
+float Matrix::EucNorm() {
+	float f_norm = 0.0;
+	for (int i = 0; i < i_size; i++)
+		for (int j = 0; j < i_size; j++)
+			f_norm += abs(f_p_matrix[i][j]* f_p_matrix[i][j]);
+	return sqrt(f_norm);
 }
 
 //оператор вывода
@@ -97,7 +130,7 @@ ostream& operator <<(ostream& out, Matrix& matrix) {
 
 void main() {
 	setlocale(LC_ALL, "russian");
-	cout << "КВАДРАТНЫЕ МАТРИЦЫ 1.0\n";
+	cout << "КВАДРАТНЫЕ МАТРИЦЫ\n";
 	int i_size;
 	cout << "Введите размерность: ";
 	cin >> i_size;
@@ -105,6 +138,9 @@ void main() {
 		*m_2 = m_1,
 		*m_res = new Matrix(i_size);
 	cout << "\nОригинальная матрица:\n" << *m_1;
+	cout << "Бесконечная норма = " << m_1->InfNorm() << endl;
+	cout << "Первая норма = " << m_1->FstNorm() << endl;
+	cout << "Евклидова норма = " << m_1->EucNorm() << endl << endl;
 	cout << "Скопированная матрица:\n" << *m_2;
 	*m_res = *m_1 + *m_2;
 	cout << "Матрица1 + Матрица2:\n" << *m_res;
