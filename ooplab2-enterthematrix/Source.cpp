@@ -40,21 +40,18 @@ public:
 		for (i = 0; i < i_size; i++) {
 			cout << endl << endl;
 			for (j = 0; j < i_size; j++)
-				cout << setw(2) << Get(i, j) << " ";
+				cout << setw(2) << f_p_matrix[i][j] << " ";
 		}
 		cout << endl << endl;
 	}
 
-	Matrix operator+(const Matrix &matrix)
+	Matrix operator+(Matrix &matrix)
 	{
-		Matrix *result = new Matrix(*this);
-		for (size_t i = 0; i < 3; ++i)
-		{
-			for (size_t j = 0; j < 3; ++j)
-			{
-				result->f_p_matrix[i][j] += matrix.f_p_matrix[i][j];
-			}
-		}
+		Matrix *result = new Matrix(i_size);
+		for (int i = 0; i < i_size; ++i)
+			for (int j = 0; j < i_size; ++j)
+				result->f_p_matrix[i][j] = this->f_p_matrix[i][j] + matrix.f_p_matrix[i][j];
+		result->Show();
 		return *result;
 	}
 
@@ -66,12 +63,14 @@ void main() {
 	int i;
 	cout << "Введите размер матрицы: ";
 	cin >> i;
-	Matrix *m_1 = new Matrix(i), *m_2 = m_1, *m_3 = new Matrix(i);
+	Matrix *m_1 = new Matrix(i), *m_2 = m_1, *m_3 = new Matrix();
 	cout << "\nПервая матрица.";
 	m_1->Show();
 	cout << "Вторая матрица.";
 	m_2->Show();
-	//m_3 = m_1 + m_2;
+	m_3->Show();
+	*m_3 = *m_1 + *m_2;
+	m_3->Show();
 
 	cout << endl << endl;
 	system("@pause");
