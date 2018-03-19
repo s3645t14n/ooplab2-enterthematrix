@@ -96,8 +96,7 @@ Matrix& Matrix::Sub(const Matrix& matrix) {
 Matrix& Matrix::Mul(const Matrix& matrix) {
 	Matrix *result = new Matrix(i_size);
 	for (int i = 0; i < i_size; i++)
-		for (int j = 0; j < i_size; j++)
-		{
+		for (int j = 0; j < i_size; j++) {
 			result->f_p_matrix[i][j] = 0;
 			for (int k = 0; k < i_size; k++)
 				result->f_p_matrix[i][j] += (f_p_matrix[i][k] * matrix.f_p_matrix[k][j]);
@@ -180,27 +179,28 @@ void main() {
 	Matrix m_1(i_size),
 		m_2 = m_1,
 		m_res = (i_size);
-	cout << "\nОригинальная матрица (Matrix m_1(i_size)):\n" << m_1;
+	cout << "\nЗаполнение случайными числами\n" << "Оригинальная матрица (Matrix m_1(i_size)):\n" << m_1;
 	cout << "Бесконечная норма (m_1.InfNorm()) = " << m_1.InfNorm() << endl;
 	cout << "Первая норма (m_1.FstNorm()) = " << m_1.FstNorm() << endl;
 	cout << "Евклидова норма (m_1.EucNorm()) = " << m_1.EucNorm() << endl << endl;
-	cout << "Скопированная матрица (конструктор копирования, m_2 = m_1):\n" << m_2;
+	cout << "Использование конструктора копирования\n" << "Скопированная матрица (m_2 = m_1):\n" << m_2;
 	m_res = m_1 + m_2;
-	cout << "Матрица1 + Матрица2 (m_res = m_1 + m_2):\n" << m_res;
+	cout << "Перегрузка оператора сложения\n" << "(m_res = m_1 + m_2):\n" << m_res;
 	m_res = m_1 - m_2;
-	cout << "Матрица1 - Матрица2 (m_res = m_1 - m_2):\n" << m_res;
+	cout << "Перегрузка оператора вычитания\n" << "(m_res = m_1 - m_2):\n" << m_res;
 	m_res = m_1 * m_2;
-	cout << "Матрица1 * Матрица2 (m_res = m_1 * m_2):\n" << m_res;
+	cout << "Перегрузка оператора умножения\n" << "(m_res = m_1 * m_2):\n" << m_res;
 	m_res = m_1;
-	cout << "Матрица3 = Матрица1 (m_res = m_1): \n" << m_res;
-	cout << "Введите число матриц в массиве (i_quan):";
+	cout << "Перегрузка оператора присвоения\n" << "(m_res = m_1): \n" << m_res;
+	cout << "Создание массива матриц\n" << "Введите число матриц в массиве (i_quan):";
 	cin >> i_quan;
 	Matrix *m_mas = new Matrix[i_quan];
 	PrintMas(i_quan, m_mas);
-	cout << "Введите номер матрицы для возведения в квадрат:";
+	cout << "Передача массива матриц в функцию квадрата\n" << "Введите номер матрицы для возведения в квадрат:";
 	cin >> i_num;
 	Pow(i_num, m_mas);
 	PrintMas(i_quan, m_mas);
 	cout << endl << endl;
+	delete m_mas;
 	system("@pause");
 }
