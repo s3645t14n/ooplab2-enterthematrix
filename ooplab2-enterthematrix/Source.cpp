@@ -22,13 +22,13 @@ public:
 	~Matrix(); //деструктор
 	Matrix(int i_size); //основной конструктор
 	Matrix(const Matrix&); //конструктор копирования
-	Matrix& Sum(const Matrix& matrix); //сложение
-	Matrix& Sub(const Matrix& matrix); //вычитание
-	Matrix& Mul(const Matrix& matrix); //умножение
-	Matrix& operator + (const Matrix& matrix); //оператор сложения
-	Matrix& operator - (const Matrix& matrix); //оператор вычитания
-	Matrix& operator * (const Matrix& matrix); //оператор умножения
-	Matrix& operator = (const Matrix& matrix); //оператор присваивания
+	Matrix Sum(const Matrix& matrix); //сложение
+	Matrix Sub(const Matrix& matrix); //вычитание
+	Matrix Mul(const Matrix& matrix); //умножение
+	Matrix operator+ (const Matrix& matrix); //оператор сложения
+	Matrix operator- (const Matrix& matrix); //оператор вычитания
+	Matrix operator* (const Matrix& matrix); //оператор умножения
+	Matrix& operator= (const Matrix& matrix); //оператор присваивания
 	float InfNorm(); //бесконечная норма
 	float FstNorm(); //первая норма
 	float EucNorm(); //евклидова норма
@@ -58,7 +58,8 @@ Matrix::~Matrix() {
 //основной конструктор
 Matrix::Matrix(int i_size) : i_size(i_size) {
 	f_p_matrix = new float *[i_size];
-	for (int i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
+	for (int i = 0; i < i_size; i++) 
+		f_p_matrix[i] = new float[i_size];
 	for (int i = 0; i < i_size; i++)
 		for (int j = 0; j < i_size; j++)
 			f_p_matrix[i][j] = rand() % 11;
@@ -75,7 +76,7 @@ Matrix::Matrix(const Matrix& matrix) {
 }
 
 //метод сложения
-Matrix& Matrix::Sum(const Matrix& matrix) {
+Matrix Matrix::Sum(const Matrix& matrix) {
 	Matrix *result = new Matrix(i_size);
 	for (int i = 0; i < i_size; ++i)
 		for (int j = 0; j < i_size; ++j)
@@ -84,7 +85,7 @@ Matrix& Matrix::Sum(const Matrix& matrix) {
 }
 
 //метод вычитания
-Matrix& Matrix::Sub(const Matrix& matrix) {
+Matrix Matrix::Sub(const Matrix& matrix) {
 	Matrix *result = new Matrix(i_size);
 	for (int i = 0; i < i_size; ++i)
 		for (int j = 0; j < i_size; ++j)
@@ -93,7 +94,7 @@ Matrix& Matrix::Sub(const Matrix& matrix) {
 }
 
 //метод умножения
-Matrix& Matrix::Mul(const Matrix& matrix) {
+Matrix Matrix::Mul(const Matrix& matrix) {
 	Matrix *result = new Matrix(i_size);
 	for (int i = 0; i < i_size; i++)
 		for (int j = 0; j < i_size; j++) {
@@ -105,25 +106,31 @@ Matrix& Matrix::Mul(const Matrix& matrix) {
 }
 
 //оператор вычитания
-Matrix& Matrix::operator + (const Matrix& matrix) {
+Matrix Matrix::operator+ (const Matrix& matrix) {
 	return Sum(matrix);
 }
 
 //оператор вычитания
-Matrix& Matrix::operator - (const Matrix& matrix) {
+Matrix Matrix::operator- (const Matrix& matrix) {
 	return Sub(matrix);
 }
 
 //оператор умножения
-Matrix& Matrix::operator * (const Matrix& matrix) {
+Matrix Matrix::operator* (const Matrix& matrix) {
 	return Mul(matrix);
 }
 
 //оператор присваивания
-Matrix& Matrix::operator = (const Matrix& matrix) {
-	for (int i = 0; i < i_size; i++)
-		for (int j = 0; j < i_size; j++)
-			f_p_matrix[i][j] = matrix.f_p_matrix[i][j];
+Matrix& Matrix::operator= (const Matrix& matrix) {
+	if (&matrix != this) {
+		delete[] f_p_matrix;
+		f_p_matrix = new float *[i_size];
+		for (int i = 0; i < i_size; i++) 
+			f_p_matrix[i] = new float[i_size];
+		for (int i = 0; i < i_size; i++)
+			for (int j = 0; j < i_size; j++)
+				f_p_matrix[i][j] = matrix.f_p_matrix[i][j];
+	}
 	return *this;
 }
 
@@ -194,7 +201,6 @@ void main() {
 	cout << "Введите размерность(i_size): ";
 	cin >> i_size;
 	Matrix m_1(i_size),
-		m_2 = m_1,
 		m_res = (i_size);
 	cout << "\nЗаполнение случайными числами...\n" 
 		<< "Оригинальная матрица (Matrix m_1(i_size)):\n" << m_1;
@@ -203,6 +209,7 @@ void main() {
 	cout << "Бесконечная норма (m_1.InfNorm()) = " << m_1.InfNorm() << endl;
 	cout << "Первая норма (m_1.FstNorm()) = " << m_1.FstNorm() << endl;
 	cout << "Евклидова норма (m_1.EucNorm()) = " << m_1.EucNorm() << endl << endl;
+	Matrix m_2 = m_1;
 	cout << "Использование конструктора копирования...\n" 
 		<< "Скопированная матрица (m_2 = m_1):\n" << m_2;
 	m_res = m_1 + m_2;
@@ -231,6 +238,6 @@ void main() {
 	PrintMas(i_quan, m_p_mas);
 
 	delete[] m_p_mas;
-	cout << "Массив удален" << endl;
+	cout << "Массив удален\n" << endl;
 	system("@pause");
 }
