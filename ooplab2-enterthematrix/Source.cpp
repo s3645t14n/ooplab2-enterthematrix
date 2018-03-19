@@ -1,11 +1,11 @@
 ﻿//Определить класс «Квадратная матрица» – Matrix. Класс должен 
 //содержать несколько конструкторов, в том числе конструктор 
-//копирования.Реализовать методы для сложения, вычитания, 
-//умножения матриц; вычисления нормы матрицы.Перегрузить 
+//копирования. Реализовать методы для сложения, вычитания, 
+//умножения матриц; вычисления нормы матрицы. Перегрузить 
 //операции сложения, вычитания, умножения и присваивания для 
-//данного класса.Создать массив объектов класса Matrix и 
+//данного класса. Создать массив объектов класса Matrix и 
 //передать его в функцию, которая изменяет i - ю матрицу 
-//путем возведения ее в квадрат.В головной программе вывести 
+//путем возведения ее в квадрат. В головной программе вывести 
 //результат.
 
 #include <iostream>
@@ -18,43 +18,51 @@ class Matrix {
 	float **f_p_matrix;
 	int i_size;
 public:
-	//конструктор по умолчанию
-	Matrix() {
-		cout << "Введите размерность: ";
-		cin >> i_size;
-		f_p_matrix = new float *[i_size];
-		for (int i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
-		for (int i = 0; i < i_size; i++)
-			for (int j = 0; j < i_size; j++)
-				f_p_matrix[i][j] = rand() % 11;
-	}
-	
-	//оператор сложения
-	Matrix& operator + (const Matrix& matrix) {
-		return Sum(matrix);
-	}
-
-	//оператор вычитания
-	Matrix& operator - (const Matrix& matrix) {
-		return Sub(matrix);
-	}
-
-	//оператор умножения
-	Matrix& operator * (const Matrix& matrix) {
-		return Mul(matrix);
-	}
-
-	Matrix(int i_size); //конструктор основной
+	Matrix(); //конструктор по умолчанию
+	~Matrix(); //деструктор
+	Matrix(int i_size); //основной конструктор
 	Matrix(const Matrix&); //конструктор копирования
 	Matrix& Sum(const Matrix& matrix); //сложение
 	Matrix& Sub(const Matrix& matrix); //вычитание
 	Matrix& Mul(const Matrix& matrix); //умножение
+	Matrix& operator + (const Matrix& matrix); //оператор сложения
+	Matrix& operator - (const Matrix& matrix); //оператор вычитания
+	Matrix& operator * (const Matrix& matrix); //оператор умножения
 	Matrix& operator = (const Matrix& matrix); //оператор присваивания
 	float InfNorm(); //бесконечная норма
 	float FstNorm(); //первая норма
 	float EucNorm(); //евклидова норма
 	friend ostream& operator<<(ostream&, Matrix&); //оператор вывода
 };
+
+//конструктор по умолчанию
+Matrix::Matrix() {
+	cout << "Введите размерность: ";
+	cin >> i_size;
+	f_p_matrix = new float* [i_size];
+	for (int i = 0; i < i_size; i++) 
+		f_p_matrix[i] = new float[i_size];
+	for (int i = 0; i < i_size; i++)
+		for (int j = 0; j < i_size; j++)
+			f_p_matrix[i][j] = rand() % 11;
+}
+
+//деструктор
+Matrix::~Matrix() {
+	for (int i = 0; i < i_size; i++)
+		delete[] f_p_matrix[i];
+	delete[] f_p_matrix;
+	cout << "Матрица удалена" << endl;
+}
+
+//основной конструктор
+Matrix::Matrix(int i_size) : i_size(i_size) {
+	f_p_matrix = new float *[i_size];
+	for (int i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
+	for (int i = 0; i < i_size; i++)
+		for (int j = 0; j < i_size; j++)
+			f_p_matrix[i][j] = rand() % 11;
+}
 
 //конструктор копирования
 Matrix::Matrix(const Matrix& matrix) {
@@ -64,14 +72,6 @@ Matrix::Matrix(const Matrix& matrix) {
 	for (int i = 0; i < i_size; i++)
 		for (int j = 0; j < i_size; j++)
 			f_p_matrix[i][j] = matrix.f_p_matrix[i][j];
-}
-
-Matrix::Matrix(int i_size) : i_size(i_size) {
-	f_p_matrix = new float *[i_size];
-	for (int i = 0; i < i_size; i++) f_p_matrix[i] = new float[i_size];
-	for (int i = 0; i < i_size; i++)
-		for (int j = 0; j < i_size; j++)
-			f_p_matrix[i][j] = rand() % 11;
 }
 
 //метод сложения
@@ -102,6 +102,21 @@ Matrix& Matrix::Mul(const Matrix& matrix) {
 				result->f_p_matrix[i][j] += (f_p_matrix[i][k] * matrix.f_p_matrix[k][j]);
 		}
 	return *result;
+}
+
+//оператор вычитания
+Matrix& Matrix::operator + (const Matrix& matrix) {
+	return Sum(matrix);
+}
+
+//оператор вычитания
+Matrix& Matrix::operator - (const Matrix& matrix) {
+	return Sub(matrix);
+}
+
+//оператор умножения
+Matrix& Matrix::operator * (const Matrix& matrix) {
+	return Mul(matrix);
 }
 
 //оператор присваивания
@@ -159,12 +174,12 @@ ostream& operator <<(ostream& out, Matrix& matrix) {
 
 //вывод массива матриц
 void PrintMas(int i_quan, Matrix *matrix) {
-	cout << "\nMatrix *m_mas = new Matrix[i_quan]:\n";
+	cout << "\nMatrix *m_p_mas = new Matrix[i_quan]:\n";
 	for (int i = 0; i < i_quan; i++)
-	cout << "m_mas[" << i << "]" << matrix[i];
+	cout << "m_p_mas[" << i << "]" << matrix[i];
 }
 
-//возведение матрицы в квадрат по индексу
+//возведение матрицы в квадрат по ее индексу
 void Pow(int i_num, Matrix *matrix) {
 	matrix[i_num] = matrix[i_num] * matrix[i_num];
 }
@@ -174,33 +189,48 @@ void main() {
 	srand(time(0));
 	cout << "КВАДРАТНЫЕ МАТРИЦЫ\n";
 	int i_size, i_quan, i_num;
+
+	//создание матриц
 	cout << "Введите размерность(i_size): ";
 	cin >> i_size;
 	Matrix m_1(i_size),
 		m_2 = m_1,
 		m_res = (i_size);
-	cout << "\nЗаполнение случайными числами\n" << "Оригинальная матрица (Matrix m_1(i_size)):\n" << m_1;
+	cout << "\nЗаполнение случайными числами...\n" 
+		<< "Оригинальная матрица (Matrix m_1(i_size)):\n" << m_1;
+	
+	//демонстрация вычислений
 	cout << "Бесконечная норма (m_1.InfNorm()) = " << m_1.InfNorm() << endl;
 	cout << "Первая норма (m_1.FstNorm()) = " << m_1.FstNorm() << endl;
 	cout << "Евклидова норма (m_1.EucNorm()) = " << m_1.EucNorm() << endl << endl;
-	cout << "Использование конструктора копирования\n" << "Скопированная матрица (m_2 = m_1):\n" << m_2;
+	cout << "Использование конструктора копирования...\n" 
+		<< "Скопированная матрица (m_2 = m_1):\n" << m_2;
 	m_res = m_1 + m_2;
-	cout << "Перегрузка оператора сложения\n" << "(m_res = m_1 + m_2):\n" << m_res;
+	cout << "Перегрузка оператора сложения...\n" 
+		<< "(m_res = m_1 + m_2):\n" << m_res;
 	m_res = m_1 - m_2;
-	cout << "Перегрузка оператора вычитания\n" << "(m_res = m_1 - m_2):\n" << m_res;
+	cout << "Перегрузка оператора вычитания...\n" 
+		<< "(m_res = m_1 - m_2):\n" << m_res;
 	m_res = m_1 * m_2;
-	cout << "Перегрузка оператора умножения\n" << "(m_res = m_1 * m_2):\n" << m_res;
+	cout << "Перегрузка оператора умножения...\n" 
+		<< "(m_res = m_1 * m_2):\n" << m_res;
 	m_res = m_1;
-	cout << "Перегрузка оператора присвоения\n" << "(m_res = m_1): \n" << m_res;
-	cout << "Создание массива матриц\n" << "Введите число матриц в массиве (i_quan):";
+	cout << "Перегрузка оператора присваивания...\n" 
+		<< "(m_res = m_1): \n" << m_res;
+	
+	//работа с массивом матриц
+	cout << "Создание массива матриц...\n" 
+		<< "Введите число матриц в массиве (i_quan):";
 	cin >> i_quan;
-	Matrix *m_mas = new Matrix[i_quan];
-	PrintMas(i_quan, m_mas);
-	cout << "Передача массива матриц в функцию квадрата\n" << "Введите номер матрицы для возведения в квадрат:";
+	Matrix *m_p_mas = new Matrix[i_quan];
+	PrintMas(i_quan, m_p_mas);
+	cout << "Передача массива матриц в функцию возведения в квадрат...\n" 
+		<< "Введите индекс матрицы для возведения в квадрат:";
 	cin >> i_num;
-	Pow(i_num, m_mas);
-	PrintMas(i_quan, m_mas);
-	cout << endl << endl;
-	delete m_mas;
+	Pow(i_num, m_p_mas);
+	PrintMas(i_quan, m_p_mas);
+
+	delete[] m_p_mas;
+	cout << "Массив удален" << endl;
 	system("@pause");
 }
