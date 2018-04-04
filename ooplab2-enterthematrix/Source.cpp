@@ -14,6 +14,10 @@
 
 using namespace std;
 
+double random(double min = 0.0, double max = 10.0){
+	return (double)(rand()) / RAND_MAX*(max - min) + min;
+}
+
 class Matrix {
 	float **f_p_matrix;
 	int i_size;
@@ -37,6 +41,7 @@ public:
 
 //конструктор по умолчанию
 Matrix::Matrix() {
+	srand(clock()*time(0)*rand());
 	cout << "Введите размерность: ";
 	cin >> i_size;
 	f_p_matrix = new float* [i_size];
@@ -44,7 +49,7 @@ Matrix::Matrix() {
 		f_p_matrix[i] = new float[i_size];
 	for (int i = 0; i < i_size; i++)
 		for (int j = 0; j < i_size; j++)
-			f_p_matrix[i][j] = rand() % 11;
+			f_p_matrix[i][j] = random();
 }
 
 //деструктор
@@ -57,12 +62,13 @@ Matrix::~Matrix() {
 
 //основной конструктор
 Matrix::Matrix(int i_size) : i_size(i_size) {
+	srand(clock()*time(0)*rand());
 	f_p_matrix = new float *[i_size];
 	for (int i = 0; i < i_size; i++) 
 		f_p_matrix[i] = new float[i_size];
 	for (int i = 0; i < i_size; i++)
 		for (int j = 0; j < i_size; j++)
-			f_p_matrix[i][j] = rand() % 11;
+			f_p_matrix[i][j] = random();
 }
 
 //конструктор копирования
@@ -173,14 +179,14 @@ ostream& operator <<(ostream& out, Matrix& matrix) {
 	for (i = 0; i < matrix.i_size; i++) {
 		out << endl;
 		for (j = 0; j < matrix.i_size; j++)
-			out << setw(3) << matrix.f_p_matrix[i][j] << " ";
+			out << setw(5) << setprecision(3) << matrix.f_p_matrix[i][j] << " ";
 	}
 	out << endl << endl << endl;
 	return out;
 }
 
 //вывод массива матриц
-void PrintMas(int i_quan, Matrix *matrix) {
+void PrintMas(int i_quan, Matrix* matrix) {
 	cout << "\nMatrix *m_p_mas = new Matrix[i_quan]:\n";
 	for (int i = 0; i < i_quan; i++)
 	cout << "m_p_mas[" << i << "]" << matrix[i];
@@ -193,7 +199,6 @@ void Pow(int i_num, Matrix *matrix) {
 
 void main() {
 	setlocale(LC_ALL, "russian");
-	srand(time(0));
 	cout << "КВАДРАТНЫЕ МАТРИЦЫ\n";
 	int i_size, i_quan, i_num;
 
