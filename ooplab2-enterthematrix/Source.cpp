@@ -14,7 +14,7 @@
 
 using namespace std;
 
-double random(double min = 0.0, double max = 10.0){
+double random(double min = 0.0, double max = 10.0) {
 	return (double)(rand()) / RAND_MAX*(max - min) + min;
 }
 
@@ -33,7 +33,7 @@ public:
 		for (int i = 0; i < i_size; i++)
 			for (int j = 0; j < i_size; j++)
 				f_p_matrix[i][j] = random();
-	}; 
+	};
 
 	//деструктор
 	~Matrix() {
@@ -41,7 +41,7 @@ public:
 			delete[] f_p_matrix[i];
 		delete[] f_p_matrix;
 		cout << "Матрица удалена" << endl;
-	}; 
+	};
 
 	//основной конструктор
 	Matrix(int i_size) : i_size(i_size) {
@@ -63,6 +63,16 @@ public:
 			for (int j = 0; j < i_size; j++)
 				f_p_matrix[i][j] = matrix.f_p_matrix[i][j];
 	};
+
+	//возврат размера
+	int GetSize() {
+		return i_size;
+	}
+
+	//возврат элемента
+	t_Type GetVal(int i, int j) {
+		return f_p_matrix[i][j];
+	}
 
 	//сложение
 	Matrix Sum(const Matrix& matrix) {
@@ -155,17 +165,62 @@ public:
 				f_norm += abs(f_p_matrix[i][j] * f_p_matrix[i][j]);
 		return sqrt(f_norm);
 	};
-
-	template <typename o_Type> friend ostream& operator<< (ostream&, const Matrix<o_Type>&); //оператор вывода
 };
 
 //оператор вывода
-template <typename t_Type> ostream& operator<< (ostream& out, const Matrix<t_Type>& matrix) {
+template <typename t_Type> ostream& operator<< (ostream& out, Matrix<t_Type>& matrix) {
 	int i, j;
-	for (i = 0; i < matrix.i_size; i++) {
+	cout << "шаблонированный вывод через template <typename t_Type> ostream& operator<<\n";
+	for (i = 0; i < matrix.GetSize(); i++) {
 		out << endl;
-		for (j = 0; j < matrix.i_size; j++)
-			out << setw(5) << setprecision(3) << (double)matrix.f_p_matrix[i][j] << " ";
+		for (j = 0; j < matrix.GetSize(); j++)
+			out << setw(5) << setprecision(3) << matrix.GetVal(i, j) << " ";
+	}
+	out << endl << endl << endl;
+	return out;
+}
+
+//оператор вывода char
+ostream& operator<< (ostream& out, Matrix<char>& matrix) {
+	int i, j;
+	cout << "простой вывод через ostream& operator<< (ostream& out, Matrix<char>& matrix)\n";
+	for (i = 0; i < matrix.GetSize(); i++) {
+		out << endl;
+		for (j = 0; j < matrix.GetSize(); j++) {
+			switch ((int)matrix.GetVal(i, j)) {
+			case 0:
+				out << setw(7) << "ноль" << " ";
+				break;
+			case 1:
+				out << setw(7) << "один" << " ";
+				break;
+			case 2:
+				out << setw(7) << "два" << " ";
+				break;
+			case 3:
+				out << setw(7) << "три" << " ";
+				break;
+			case 4:
+				out << setw(7) << "четыре" << " ";
+				break;
+			case 5:
+				out << setw(7) << "пять" << " ";
+				break;
+			case 6:
+				out << setw(7) << "шесть" << " ";
+				break;
+			case 7:
+				out << setw(7) << "семь" << " ";
+				break;
+			case 8:
+				out << setw(7) << "восемь" << " ";
+				break;
+			case 9:
+				out << setw(7) << "девять" << " ";
+				break;
+			}
+			
+		}
 	}
 	out << endl << endl << endl;
 	return out;
@@ -175,7 +230,7 @@ template <typename t_Type> ostream& operator<< (ostream& out, const Matrix<t_Typ
 template <typename f_Type> void PrintMas(int i_quan, Matrix<f_Type>* matrix) {
 	cout << "\nMatrix *m_p_mas = new Matrix[i_quan]:\n";
 	for (int i = 0; i < i_quan; i++)
-	cout << "m_p_mas[" << i << "]" << matrix[i];
+		cout << "m_p_mas[" << i << "]" << matrix[i];
 }
 
 //возведение матрицы в квадрат по ее индексу
@@ -191,42 +246,42 @@ void main() {
 	//создание матриц
 	cout << "Введите размерность(i_size): ";
 	cin >> i_size;
-	Matrix<float> m_1(i_size), 
+	Matrix<float> m_1(i_size),
 		m_res = (i_size);
 	Matrix<int> mi_1(i_size);
 	Matrix<char> mc_1(i_size);
-	cout << "\nЗаполнение случайными числами...\n" 
+	cout << "\nЗаполнение случайными числами...\n"
 		<< "Оригинальная матрица float (Matrix m_1(i_size)):\n" << m_1
 		<< "СЛучайная матрица int (Matrix mi_1(i_size)):\n" << mi_1
 		<< "Случайная матрица char (Matrix mc_1(i_size)):\n" << mc_1;
-	
+
 	//демонстрация вычислений
 	cout << "Бесконечная норма (m_1.InfNorm()) = " << m_1.InfNorm() << endl;
 	cout << "Первая норма (m_1.FstNorm()) = " << m_1.FstNorm() << endl;
 	cout << "Евклидова норма (m_1.EucNorm()) = " << m_1.EucNorm() << endl << endl;
 	Matrix<float> m_2 = m_1;
-	cout << "Использование конструктора копирования...\n" 
+	cout << "Использование конструктора копирования...\n"
 		<< "Скопированная матрица(float) (m_2 = m_1):\n" << m_2;
 	m_res = m_1 + m_2;
-	cout << "Перегрузка оператора сложения...\n" 
+	cout << "Перегрузка оператора сложения...\n"
 		<< "(m_res = m_1 + m_2):\n" << m_res;
 	m_res = m_1 - m_2;
-	cout << "Перегрузка оператора вычитания...\n" 
+	cout << "Перегрузка оператора вычитания...\n"
 		<< "(m_res = m_1 - m_2):\n" << m_res;
 	m_res = m_1 * m_2;
-	cout << "Перегрузка оператора умножения...\n" 
+	cout << "Перегрузка оператора умножения...\n"
 		<< "(m_res = m_1 * m_2):\n" << m_res;
 	m_res = m_1;
-	cout << "Перегрузка оператора присваивания...\n" 
+	cout << "Перегрузка оператора присваивания...\n"
 		<< "(m_res = m_1): \n" << m_res;
-	
+
 	//работа с массивом матриц
-	cout << "Создание массива матриц...\n" 
+	cout << "Создание массива матриц...\n"
 		<< "Введите число матриц в массиве (i_quan):";
 	cin >> i_quan;
-	Matrix<float> *m_p_mas = new Matrix<float> [i_quan];
+	Matrix<float> *m_p_mas = new Matrix<float>[i_quan];
 	PrintMas(i_quan, m_p_mas);
-	cout << "Передача массива матриц в функцию возведения в квадрат...\n" 
+	cout << "Передача массива матриц в функцию возведения в квадрат...\n"
 		<< "Введите индекс матрицы для возведения в квадрат:";
 	cin >> i_num;
 	Pow(i_num, m_p_mas);
