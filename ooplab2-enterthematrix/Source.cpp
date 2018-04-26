@@ -168,7 +168,7 @@ public:
 };
 
 //оператор вывода
-template <typename t_Type> ostream& operator<< (ostream& out, Matrix<t_Type>& matrix) {
+template <typename o_Type> ostream& operator<< (ostream& out, Matrix<o_Type>& matrix) {
 	int i, j;
 	cout << "шаблонированный вывод через template <typename t_Type> ostream& operator<<\n";
 	for (i = 0; i < matrix.GetSize(); i++) {
